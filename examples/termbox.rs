@@ -11,8 +11,8 @@ const COL: usize = 4;
 
 fn main() {
     env_logger::init();
-    let term = Arc::new(Term::with_height(TermHeight::Fixed(10)).unwrap());
-    let _ = term.enable_mouse_support();
+    let term = Arc::new(Term::new().unwrap());
+    // let _ = term.enable_mouse_support();
     let now = Instant::now();
 
     print_banner(&term);

@@ -36,6 +36,9 @@ pub struct Win<'a, Message = ()> {
     grow: usize,
     shrink: usize,
 
+    title: String,
+    title_attr: Attr,
+
     inner: Box<dyn Widget<Message> + 'a>,
 }
 
@@ -62,6 +65,8 @@ impl<'a, Message> Win<'a, Message> {
             basis: Size::Default,
             grow: 1,
             shrink: 1,
+            title: String::default(),
+            title_attr: Default::default(),
             inner: Box::new(widget),
         }
     }
@@ -193,6 +198,18 @@ impl<'a, Message> Win<'a, Message> {
 
     pub fn shrink(mut self, shrink: usize) -> Self {
         self.shrink = shrink;
+        self
+    }
+
+    pub fn title(mut self, title: &str) -> Self {
+        self.title.clear();
+        self.title.push_str(title);
+        self
+    }
+
+    pub fn title_attr(mut self, attr: impl Into<Attr>) -> Self {
+        let attr = attr.into();
+        self.title_attr = attr;
         self
     }
 }
@@ -373,6 +390,10 @@ impl<'a, Message> Win<'a, Message> {
                 right,
                 Cell::default().ch('┘').attribute(self.border_bottom_attr),
             );
+        }
+
+        if !self.title.is_empty() {
+            let _ = canvas.print_with_attr(top, left + 2, &self.title, self.title_attr);
         }
 
         Ok(())
